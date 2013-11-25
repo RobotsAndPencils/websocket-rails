@@ -8,17 +8,7 @@ module WebsocketRails
     def initialize(connection_manager)
       @connection_manager = connection_manager
       @controller_factory = ControllerFactory.new(self)
-      @event_map = EventMap.new(self)
-    end
-
-    def receive_encoded(encoded_data,connection)
-      event = Event.new_from_json( encoded_data, connection )
-      dispatch( event )
-    end
-
-    def receive(event_name,data,connection)
-      event = Event.new event_name, data, connection
-      dispatch( event )
+      @event_map = EventMap.new
     end
 
     def dispatch(event)
@@ -46,7 +36,7 @@ module WebsocketRails
       return unless defined?(Rails) and !Rails.configuration.cache_classes
       begin
         load "#{Rails.root}/config/events.rb"
-        @event_map = EventMap.new(self)
+        @event_map = EventMap.new
       rescue Exception => ex
         log(:warn, "EventMap reload failed: #{ex.message}")
       end
@@ -95,7 +85,6 @@ module WebsocketRails
     def record_invalid_defined?
       Object.const_defined?('ActiveRecord') and ActiveRecord.const_defined?('RecordInvalid')
     end
-
 
   end
 end
