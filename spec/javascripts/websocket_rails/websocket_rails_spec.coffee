@@ -137,19 +137,16 @@ describe 'WebSocketRails:', ->
     describe 'after the connection has been established', ->
       beforeEach ->
         @dispatcher.state = 'connected'
-        @attributes =
-          data: 'message'
-          channel: 'channel'
+        @data = ['event', 'message', {channel: 'channel'}]
 
       it 'should dispatch channel messages', ->
-        data = [['event',@attributes]]
         mock_dispatcher = sinon.mock @dispatcher
         mock_dispatcher.expects('dispatch_channel').once()
-        @dispatcher.new_message data
+        @dispatcher.new_message @data
         mock_dispatcher.verify()
 
       it 'should dispatch standard events', ->
-        data = [['event','message']]
+        data = ['event','message']
         mock_dispatcher = sinon.mock @dispatcher
         mock_dispatcher.expects('dispatch').once()
         @dispatcher.new_message data
@@ -157,6 +154,7 @@ describe 'WebSocketRails:', ->
 
       describe 'result events', ->
         beforeEach ->
+          @attributes = {}
           @attributes['success'] = true
           @attributes['id'] = 1
           @event = { run_callbacks: (data) -> }
@@ -164,10 +162,10 @@ describe 'WebSocketRails:', ->
           @dispatcher.queue[1] = @event
 
         it 'should run callbacks for result events', ->
-            data = [['event',@attributes]]
-            @event_mock.expects('run_callbacks').once()
-            @dispatcher.new_message data
-            @event_mock.verify()
+          data = ['event', 'message', @attributes]
+          @event_mock.expects('run_callbacks').once()
+          @dispatcher.new_message data
+          @event_mock.verify()
 
   describe '.bind', ->
 
@@ -180,7 +178,7 @@ describe 'WebSocketRails:', ->
 
     it 'should execute the callback for the correct event', ->
       callback = sinon.spy()
-      event = new WebSocketRails.Event(['event',{data: 'message'}])
+      event = new WebSocketRails.Event(['event','message'])
       @dispatcher.bind 'event', callback
       @dispatcher.dispatch event
       expect(callback.calledWith('message')).toEqual true
@@ -197,7 +195,7 @@ describe 'WebSocketRails:', ->
       it 'should delegate to the connection object', ->
         con_trigger = sinon.spy @dispatcher._conn, 'trigger'
         @dispatcher.trigger 'event', 'message'
-        event = new WebSocketRails.Event ['websocket_rails.subscribe', {channel: 'awesome'}, 123]
+        event = new WebSocketRails.Event ['websocket_rails.subscribe', {}, {channel: 'awesome', connection_id: 123}]
         expect(con_trigger.called).toEqual true
 
   describe '.connection_stale', ->
@@ -213,7 +211,7 @@ describe 'WebSocketRails:', ->
 
   describe 'working with channels', ->
     beforeEach ->
-      WebSocketRails.Channel = (@name,@dispatcher,@is_private) ->
+      WebSocketRails.Channel = (@name, @dispatcher, @is_private) ->
 
     describe '.subscribe', ->
       describe 'for new channels', ->
@@ -243,7 +241,7 @@ describe 'WebSocketRails:', ->
         channel = @dispatcher.subscribe 'test'
         channel.dispatch = ->
         spy = sinon.spy channel, 'dispatch'
-        event = new WebSocketRails.Event(['event',{channel: 'test', data: 'awesome'}])
+        event = new WebSocketRails.Event(['event', 'awesome', {channel: 'test'}])
         @dispatcher.dispatch_channel event
         expect(spy.calledWith('event', 'awesome')).toEqual true
 

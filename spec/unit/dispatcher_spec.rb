@@ -51,7 +51,7 @@ module WebsocketRails
 
       context "channel events" do
         it "should forward the data to the correct channel" do
-          event = Event.new 'test', :data => 'data', :channel => :awesome_channel
+          event = Event.new('test', 'data', :channel => :awesome_channel)
           channel = double('channel')
           channel.should_receive(:trigger_event).with(event)
           WebsocketRails.should_receive(:[]).with(:awesome_channel).and_return(channel)
@@ -73,7 +73,7 @@ module WebsocketRails
 
     describe "#send_message" do
       before do
-        @event = Event.new_from_json( encoded_message, connection )
+        @event = Event.deserialize(encoded_message, connection)
       end
 
       it "should send a message to the event's connection object" do
@@ -85,7 +85,7 @@ module WebsocketRails
     describe "#broadcast_message" do
       before do
         connection_manager.stub(:connections).and_return({"connection_id" => connection})
-        @event = Event.new_from_json( encoded_message, connection )
+        @event = Event.deserialize(encoded_message, connection)
       end
 
       it "should send a message to all connected clients" do
