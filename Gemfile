@@ -8,15 +8,14 @@ gem "therubyracer"
 gem "jasmine"
 gem "headless"
 gem "coffee-script"
-gem "thin"
-gem "eventmachine"
 gem "faye-websocket"
 gem "simplecov"
-gem "ruby_gntp"
 gem "guard"
 gem "guard-rspec"
 gem "guard-coffeescript"
+gem "guard-bundler"
 gem "rb-fsevent"
+gem "terminal-notifier-guard"
 
 platforms :jruby do
   gem 'activerecord-jdbcsqlite3-adapter', :require => 'jdbc-sqlite3', :require => 'arjdbc'
