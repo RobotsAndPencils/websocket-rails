@@ -71,8 +71,6 @@ class @WebSocketRails
     else
       @dispatch event
 
-    console.log "received event"
-    console.log event
     if @state == 'connecting' and event.name == 'client_connected'
       @connection_established event.data
 
