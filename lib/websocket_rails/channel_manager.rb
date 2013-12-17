@@ -20,6 +20,8 @@ module WebsocketRails
 
   class ChannelManager
 
+    delegate :sync, to: Synchronization
+
     attr_reader :channels
 
     def initialize
@@ -29,7 +31,7 @@ module WebsocketRails
     def channel_tokens
       @channel_tokens ||= begin
         if WebsocketRails.synchronize?
-          ::Redis::HashKey.new('websocket_rails.channel_tokens', Synchronization.redis)
+          ::Redis::HashKey.new('websocket_rails.channel_tokens')
         else
           {}
         end

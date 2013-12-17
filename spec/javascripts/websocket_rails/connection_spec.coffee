@@ -1,6 +1,6 @@
-describe 'WebsocketRails.WebSocketConnection:', ->
+describe 'WebsocketRails.Connection:', ->
   SAMPLE_EVENT_DATA = ['event','message']
-  SAMPLE_EVENT = 
+  SAMPLE_EVENT =
     data: JSON.stringify(SAMPLE_EVENT_DATA)
 
   beforeEach ->
@@ -14,7 +14,7 @@ describe 'WebsocketRails.WebSocketConnection:', ->
       send: -> true
       close: -> @onclose(null)
     @dispatcher = dispatcher
-    @connection = new WebSocketRails.WebSocketConnection('localhost:3000/websocket', dispatcher)
+    @connection = new WebSocketRails.Connection('localhost:3000/websocket', dispatcher)
 
     @dispatcher._conn = @connection
 
@@ -83,7 +83,6 @@ describe 'WebsocketRails.WebSocketConnection:', ->
 
       dispatcher = @dispatcher.dispatch
       lastCall = dispatcher.lastCall.args[0]
-      console.log lastCall
       expect(dispatcher.calledOnce).toBe(true)
       expect(lastCall.data).toEqual event.data
 

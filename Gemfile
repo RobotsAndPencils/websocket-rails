@@ -2,7 +2,6 @@ source "http://rubygems.org"
 
 gemspec
 
-gem "rspec-rails", ">=2.12.0"
 gem "therubyrhino"
 gem "therubyracer"
 gem "jasmine"
@@ -14,6 +13,7 @@ gem "guard"
 gem "guard-rspec"
 gem "guard-coffeescript"
 gem "guard-bundler"
+gem "guard-livereload"
 gem "rb-fsevent"
 gem "terminal-notifier-guard"
 

@@ -4,6 +4,7 @@ module WebsocketRails
     include Logging
 
     delegate :config, :channel_tokens, :channel_manager, :to => WebsocketRails
+    delegate :sync, to: Synchronization
 
     attr_reader :name, :subscribers
 
@@ -78,7 +79,7 @@ module WebsocketRails
 
     def send_data(event)
       if WebsocketRails.synchronize? && event.server_token.nil?
-        Synchronization.publish event
+        sync.publish_remote event
       end
 
       subscribers.each do |subscriber|
