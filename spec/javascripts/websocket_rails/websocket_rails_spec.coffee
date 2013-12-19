@@ -29,7 +29,7 @@ describe 'WebSocketRails:', ->
       expect(@dispatcher.state).toEqual 'disconnected'
 
     it 'existing connection should be destroyed', ->
-      expect(@dispatcher._conn).toEqual null
+      expect(@dispatcher._conn).toEqual undefined
 
   describe '.reconnect', ->
     OLD_CONNECTION_ID = 1

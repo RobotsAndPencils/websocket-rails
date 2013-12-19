@@ -37,7 +37,7 @@ class @WebSocketRails
       delete @_conn._conn
       delete @_conn
 
-    @state     = 'disconnected'
+    @state = 'disconnected'
 
   # Reconnects the whole connection,
   # keeping the messages queue and its' connected channels.
@@ -72,7 +72,7 @@ class @WebSocketRails
       @connection_established event
 
   connection_established: (event) =>
-    @state         = 'connected'
+    @state = 'connected'
     @_conn.setConnectionId(event.connection_id)
     @_conn.flush_queue()
     if @on_open?
@@ -124,10 +124,6 @@ class @WebSocketRails
 
   supports_websockets: =>
     (typeof(WebSocket) == "function" or typeof(WebSocket) == "object")
-
-  pong: =>
-    pong = new WebSocketRails.Event( ['websocket_rails.pong', {}, @_conn?.connection_id] )
-    @_conn.trigger pong
 
   connection_stale: =>
     @state != 'connected'
