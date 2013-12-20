@@ -152,5 +152,13 @@ module WebsocketRails
       }
     end
 
+    def hostname
+      @hostname ||= Socket.gethostbyname(Socket.gethostname).first
+    end
+
+    def hostname=(set_host)
+      @hostname = set_host
+    end
+
   end
 end
